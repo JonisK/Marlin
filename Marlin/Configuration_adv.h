@@ -6,9 +6,9 @@
 //===========================================================================
 
 #ifdef BED_LIMIT_SWITCHING
-  #define BED_HYSTERESIS 2 //only disable heating if T>target+BED_HYSTERESIS and enable heating if T>target-BED_HYSTERESIS
+  #define BED_HYSTERESIS 1 //only disable heating if T>target+BED_HYSTERESIS and enable heating if T>target-BED_HYSTERESIS
 #endif
-#define BED_CHECK_INTERVAL 5000 //ms between checks in bang-bang control
+#define BED_CHECK_INTERVAL 1000 //ms between checks in bang-bang control
 
 //// Heating sanity check:
 // This waits for the watch period in milliseconds whenever an M104 or M109 increases the target temperature

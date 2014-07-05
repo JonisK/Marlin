@@ -25,7 +25,7 @@
 
 // This determines the communication speed of the printer
 // This determines the communication speed of the printer
-#define BAUDRATE 250000
+#define BAUDRATE 115200
 
 // This enables the serial port associated to the Bluetooth interface
 //#define BTENABLED              // Enable BT interface on AT90USB devices
@@ -74,7 +74,7 @@
 // 88 = 5DPrint D8 Driver Board
 
 #ifndef MOTHERBOARD
-#define MOTHERBOARD 7
+#define MOTHERBOARD 80
 #endif
 
 // Define this to set a custom name for your generic Mendel,
@@ -132,16 +132,17 @@
 // 1010 is Pt1000 with 1k pullup (non standard)
 // 147 is Pt100 with 4k7 pullup
 // 110 is Pt100 with 1k pullup (non standard)
+// 109 is Pt100 with 98 ohm pullup (standard 4.7k + 100 ohm in parallel)
 // 70 is 500C thermistor for Pico hot end
 
-#define TEMP_SENSOR_0 -1
-#define TEMP_SENSOR_1 -1
+#define TEMP_SENSOR_0 109
+#define TEMP_SENSOR_1 0
 #define TEMP_SENSOR_2 0
-#define TEMP_SENSOR_BED 0
+#define TEMP_SENSOR_BED 6
 
 // This makes temp sensor 1 a redundant sensor for sensor 0. If the temperatures difference between these sensors is to high the print will be aborted.
 //#define TEMP_SENSOR_1_AS_REDUNDANT
-#define MAX_REDUNDANT_TEMP_SENSOR_DIFF 10
+//#define MAX_REDUNDANT_TEMP_SENSOR_DIFF 10
 
 // Actual temperature must be close to target for this long before M109 returns success
 #define TEMP_RESIDENCY_TIME 10  // (seconds)
@@ -162,7 +163,7 @@
 #define HEATER_0_MAXTEMP 275
 #define HEATER_1_MAXTEMP 275
 #define HEATER_2_MAXTEMP 275
-#define BED_MAXTEMP 150
+#define BED_MAXTEMP 200
 
 // If your bed has low resistance e.g. .6 ohm and throws the fuse you can duty cycle it to reduce the
 // average current. The value should be an integer and the heat bed will be turned on for 1 interval of
@@ -189,9 +190,9 @@
 
 // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
 // Ultimaker
-    #define  DEFAULT_Kp 22.2
-    #define  DEFAULT_Ki 1.08
-    #define  DEFAULT_Kd 114
+//     #define  DEFAULT_Kp 22.2
+//     #define  DEFAULT_Ki 1.08
+//     #define  DEFAULT_Kd 114
 
 // MakerGear
 //    #define  DEFAULT_Kp 7.0
@@ -202,6 +203,12 @@
 //    #define  DEFAULT_Kp 63.0
 //    #define  DEFAULT_Ki 2.25
 //    #define  DEFAULT_Kd 440
+
+// Multec Pro (PT100)
+	#define DEFAULT_Kp 22.92
+	#define DEFAULT_Ki 1.40
+	#define DEFAULT_Kd 93.50
+
 #endif // PIDTEMP
 
 // Bed Temperature Control
@@ -215,8 +222,8 @@
 // shouldn't use bed PID until someone else verifies your hardware works.
 // If this is enabled, find your own PID constants below.
 //#define PIDTEMPBED
-//
-//#define BED_LIMIT_SWITCHING
+
+#define BED_LIMIT_SWITCHING
 
 // This sets the max power delivered to the bed, and replaces the HEATER_BED_DUTY_CYCLE_DIVIDER option.
 // all forms of bed control obey this (PID, bang-bang, bang-bang with hysteresis)
@@ -224,21 +231,21 @@
 // so you shouldn't use it unless you are OK with PWM on your bed.  (see the comment on enabling PIDTEMPBED)
 #define MAX_BED_POWER 255 // limits duty cycle to bed; 255=full current
 
-#ifdef PIDTEMPBED
-//120v 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
-//from FOPDT model - kp=.39 Tp=405 Tdead=66, Tc set to 79.2, aggressive factor of .15 (vs .1, 1, 10)
-    #define  DEFAULT_bedKp 10.00
-    #define  DEFAULT_bedKi .023
-    #define  DEFAULT_bedKd 305.4
-
-//120v 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
-//from pidautotune
-//    #define  DEFAULT_bedKp 97.1
-//    #define  DEFAULT_bedKi 1.41
-//    #define  DEFAULT_bedKd 1675.16
-
-// FIND YOUR OWN: "M303 E-1 C8 S90" to run autotune on the bed at 90 degreesC for 8 cycles.
-#endif // PIDTEMPBED
+// #ifdef PIDTEMPBED
+// //120v 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
+// //from FOPDT model - kp=.39 Tp=405 Tdead=66, Tc set to 79.2, aggressive factor of .15 (vs .1, 1, 10)
+//     #define  DEFAULT_bedKp 10.00
+//     #define  DEFAULT_bedKi .023
+//     #define  DEFAULT_bedKd 305.4
+// 
+// //120v 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
+// //from pidautotune
+// //    #define  DEFAULT_bedKp 97.1
+// //    #define  DEFAULT_bedKi 1.41
+// //    #define  DEFAULT_bedKd 1675.16
+// 
+// // FIND YOUR OWN: "M303 E-1 C8 S90" to run autotune on the bed at 90 degreesC for 8 cycles.
+// #endif // PIDTEMPBED
 
 
 
@@ -363,11 +370,11 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 #define max_software_endstops true  // If true, axis won't move to coordinates greater than the defined lengths below.
 
 // Travel limits after homing
-#define X_MAX_POS 205
+#define X_MAX_POS 364
 #define X_MIN_POS 0
-#define Y_MAX_POS 205
+#define Y_MAX_POS 280
 #define Y_MIN_POS 0
-#define Z_MAX_POS 200
+#define Z_MAX_POS 150
 #define Z_MIN_POS 0
 
 #define X_MAX_LENGTH (X_MAX_POS - X_MIN_POS)
@@ -400,8 +407,8 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 
     // set the rectangle in which to probe
     #define LEFT_PROBE_BED_POSITION 15
-    #define RIGHT_PROBE_BED_POSITION 170
-    #define BACK_PROBE_BED_POSITION 180
+    #define RIGHT_PROBE_BED_POSITION 270
+    #define BACK_PROBE_BED_POSITION 270
     #define FRONT_PROBE_BED_POSITION 20
 
      // set the number of grid points per dimension
@@ -477,13 +484,16 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 
 //// MOVEMENT SETTINGS
 #define NUM_AXIS 4 // The axis order in all axis related arrays is X, Y, Z, E
-#define HOMING_FEEDRATE {50*60, 50*60, 4*60, 0}  // set the homing speeds (mm/min)
+#define HOMING_FEEDRATE {50*60, 50*60, 5*60, 0}  // set the homing speeds (mm/min)
 
 // default settings
 
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {78.7402,78.7402,200.0*8/3,760*1.1}  // default steps per unit for Ultimaker
+// X and Y: 45mm pulley, 1/32 step
+// Z: M10 gear rod, 1.5mm pitch, 1/16 step
+// E: Multec Pro Extruder, 1/16 step
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {142.222, 142.222, 2133.333 , 513}  // default steps per unit for Ultimaker
 #define DEFAULT_MAX_FEEDRATE          {500, 500, 5, 25}    // (mm/sec)
-#define DEFAULT_MAX_ACCELERATION      {9000,9000,100,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for Skeinforge 40+, for older versions raise them a lot.
+#define DEFAULT_MAX_ACCELERATION      {4000,400,100,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for Skeinforge 40+, for older versions raise them a lot.
 
 #define DEFAULT_ACCELERATION          3000    // X, Y, Z and E max acceleration in mm/s^2 for printing moves
 #define DEFAULT_RETRACT_ACCELERATION  3000   // X, Y, Z and E max acceleration in mm/s^2 for retracts
@@ -495,7 +505,7 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 // #define EXTRUDER_OFFSET_Y {0.0, 5.00}  // (in mm) for each extruder, offset of the hotend on the Y axis
 
 // The speed change that does not require acceleration (i.e. the software might assume it can be done instantaneously)
-#define DEFAULT_XYJERK                20.0    // (mm/sec)
+#define DEFAULT_XYJERK                10.0    // (mm/sec)
 #define DEFAULT_ZJERK                 0.4     // (mm/sec)
 #define DEFAULT_EJERK                 5.0    // (mm/sec)
 
@@ -518,7 +528,7 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 // M501 - reads parameters from EEPROM (if you need reset them after you changed them temporarily).
 // M502 - reverts to the default "factory settings".  You still need to store them in EEPROM afterwards if you want to.
 //define this to enable EEPROM support
-//#define EEPROM_SETTINGS
+#define EEPROM_SETTINGS
 //to disable EEPROM Serial responses and decrease program space by ~1700 byte: comment this out:
 // please keep turned on if you can.
 //#define EEPROM_CHITCHAT
@@ -561,7 +571,7 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 // http://reprap.org/wiki/RepRapDiscount_Full_Graphic_Smart_Controller
 //
 // ==> REMEMBER TO INSTALL U8glib to your ARDUINO library folder: http://code.google.com/p/u8glib/wiki/u8glib
-//#define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
+#define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
 
 // The RepRapWorld REPRAPWORLD_KEYPAD v1.1
 // http://reprapworld.com/?products_details&products_id=202&cPath=1591_1626
